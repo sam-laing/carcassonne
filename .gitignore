@@ -224,3 +224,5 @@ dmypy.json
 # End of https://www.gitignore.io/api/osx,python,pycharm+all
 
 venv/
+.carca
+.venv

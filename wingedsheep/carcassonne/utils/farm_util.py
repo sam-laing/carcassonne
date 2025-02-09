@@ -26,7 +26,7 @@ class FarmUtil:
 
     @classmethod
     def find_farm(cls, game_state: CarcassonneGameState, farmer_connection_with_coordinate: FarmerConnectionWithCoordinate) -> Farm:
-        farmer_connections_with_coordinate: [FarmerConnectionWithCoordinate] = {farmer_connection_with_coordinate}
+        farmer_connections_with_coordinate: list[FarmerConnectionWithCoordinate] = {farmer_connection_with_coordinate}
         open_sides: Set[CoordinateWithFarmerSide] = set(map(lambda x: CoordinateWithFarmerSide(farmer_connection_with_coordinate.coordinate, x), farmer_connection_with_coordinate.farmer_connection.tile_connections))
         to_explore: Set[CoordinateWithFarmerSide] = set(map(lambda farmer_side: cls.opposite_edge(farmer_side), open_sides))
         to_ignore: Set[CoordinateWithFarmerSide] = open_sides.union(to_explore)

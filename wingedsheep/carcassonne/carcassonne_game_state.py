@@ -12,21 +12,21 @@ from wingedsheep.carcassonne.tile_sets.inns_and_cathedrals_deck import inns_and_
 from wingedsheep.carcassonne.tile_sets.supplementary_rules import SupplementaryRule
 from wingedsheep.carcassonne.tile_sets.the_river_deck import the_river_tiles, the_river_tile_counts
 from wingedsheep.carcassonne.tile_sets.tile_sets import TileSet
-
+from typing import Tuple
 
 class CarcassonneGameState:
 
     def __init__(
             self,
-            tile_sets: [TileSet] = (TileSet.BASE, TileSet.THE_RIVER, TileSet.INNS_AND_CATHEDRALS),
-            supplementary_rules: [SupplementaryRule] = (SupplementaryRule.FARMERS, SupplementaryRule.ABBOTS),
+            tile_sets: list[TileSet] = (TileSet.BASE, TileSet.THE_RIVER, TileSet.INNS_AND_CATHEDRALS),
+            supplementary_rules: list[SupplementaryRule] = (SupplementaryRule.FARMERS, SupplementaryRule.ABBOTS),
             players: int = 2,
-            board_size: (int, int) = (35, 35),
+            board_size: Tuple[int, int] = (35, 35),
             starting_position: Coordinate = Coordinate(6, 15)
     ):
         self.deck = self.initialize_deck(tile_sets=tile_sets)
-        self.supplementary_rules: [SupplementaryRule] = supplementary_rules
-        self.board: [[Tile]] = [[None for column in range(board_size[1])] for row in range(board_size[0])]
+        self.supplementary_rules: list[SupplementaryRule] = supplementary_rules
+        self.board: list[list[Tile]] = [[None for column in range(board_size[1])] for row in range(board_size[0])]
         self.starting_position: Coordinate = starting_position
         self.next_tile = self.deck.pop(0)
         self.players = players
@@ -34,7 +34,7 @@ class CarcassonneGameState:
         self.abbots = [1 if SupplementaryRule.ABBOTS in supplementary_rules else 0 for _ in range(players)]
         self.big_meeples = [1 if TileSet.INNS_AND_CATHEDRALS in tile_sets else 0 for _ in range(players)]
         self.placed_meeples = [[] for _ in range(players)]
-        self.scores: [int] = [0 for _ in range(players)]
+        self.scores: list[int] = [0 for _ in range(players)]
         self.current_player = 0
         self.phase = GamePhase.TILES
         self.last_tile_action: Optional[TileAction] = None
@@ -58,8 +58,8 @@ class CarcassonneGameState:
     def is_terminated(self) -> bool:
         return self.next_tile is None
 
-    def initialize_deck(self, tile_sets: [TileSet]):
-        deck: [Tile] = []
+    def initialize_deck(self, tile_sets: list[TileSet]):
+        deck: list[Tile] = []
 
         # The river
         if TileSet.THE_RIVER in tile_sets:

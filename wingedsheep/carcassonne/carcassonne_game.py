@@ -11,8 +11,8 @@ class CarcassonneGame:
 
     def __init__(self,
                  players: int = 2,
-                 tile_sets: [TileSet] = (TileSet.BASE, TileSet.THE_RIVER, TileSet.INNS_AND_CATHEDRALS),
-                 supplementary_rules: [SupplementaryRule] = (SupplementaryRule.FARMERS, SupplementaryRule.ABBOTS)):
+                 tile_sets: list[TileSet] = (TileSet.BASE, TileSet.THE_RIVER, TileSet.INNS_AND_CATHEDRALS),
+                 supplementary_rules: list[SupplementaryRule] = (SupplementaryRule.FARMERS, SupplementaryRule.ABBOTS)):
         self.players = players
         self.tile_sets = tile_sets
         self.supplementary_rules = supplementary_rules
@@ -38,5 +38,5 @@ class CarcassonneGame:
     def get_current_player(self) -> int:
         return self.state.current_player
 
-    def get_possible_actions(self) -> [Action]:
+    def get_possible_actions(self) -> list[Action]:
         return ActionUtil.get_possible_actions(self.state)

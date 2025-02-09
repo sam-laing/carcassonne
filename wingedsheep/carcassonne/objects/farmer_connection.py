@@ -5,10 +5,10 @@ from wingedsheep.carcassonne.objects.side import Side
 
 
 class FarmerConnection:
-    def __init__(self, farmer_positions: [Side], tile_connections: [FarmerSide] = (), city_sides: [Side] = ()):
-        self.farmer_positions: [Side] = farmer_positions
-        self.tile_connections: [FarmerSide] = tile_connections
-        self.city_sides: [Side] = city_sides
+    def __init__(self, farmer_positions: list[Side], tile_connections: list[FarmerSide] = (), city_sides: list[Side] = ()):
+        self.farmer_positions: list[Side] = farmer_positions
+        self.tile_connections: list[FarmerSide] = tile_connections
+        self.city_sides: list[Side] = city_sides
 
     def to_json(self):
         return {
