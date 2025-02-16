@@ -1,6 +1,9 @@
 import random
 from typing import Optional
 
+# At the top of the file, add:
+from PIL import Image, ImageTk
+from PIL.Image import Resampling 
 from wingedsheep.carcassonne.objects.actions.tile_action import TileAction
 from wingedsheep.carcassonne.objects.coordinate import Coordinate
 from wingedsheep.carcassonne.objects.game_phase import GamePhase

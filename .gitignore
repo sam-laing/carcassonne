@@ -226,3 +226,7 @@ dmypy.json
 venv/
 .carca
 .venv
+
+
+.log
+*.log
