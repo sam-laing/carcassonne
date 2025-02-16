@@ -97,8 +97,8 @@ class FarmUtil:
         return False
 
     @classmethod
-    def find_meeples(cls, game_state: CarcassonneGameState, farm: Farm) -> [[MeeplePosition]]:
-        meeples: [[MeeplePosition]] = [[] for _ in range(game_state.players)]
+    def find_meeples(cls, game_state: CarcassonneGameState, farm: Farm) -> list[list[MeeplePosition]]:
+        meeples: list[list[MeeplePosition]] = [[] for _ in range(game_state.players)]
 
         farmer_connection_with_coordinate: FarmerConnectionWithCoordinate
         for farmer_connection_with_coordinate in farm.farmer_connections_with_coordinate:
