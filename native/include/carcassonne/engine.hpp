@@ -12,7 +12,7 @@ namespace carcassonne {
 enum class Terrain : std::uint8_t { Grass, City, Road };
 enum class Phase : std::uint8_t { Tile, Meeple, Finished };
 enum class ActionKind : std::uint8_t { PlaceTile, PlaceMeeple, Pass };
-enum class Feature : std::uint8_t { City, Road, Monastery };
+enum class Feature : std::uint8_t { City, Road, Monastery, Field };
 
 struct Action {
     ActionKind kind{ActionKind::Pass};
@@ -56,7 +56,7 @@ public:
     static constexpr int kMaxPlayers = 6;
     static constexpr std::uint8_t kEmpty = 255;
 
-    explicit Game(std::uint64_t seed = 0, std::uint8_t players = 2);
+    explicit Game(std::uint64_t seed = 0, std::uint8_t players = 2, bool farmers = true);
 
     void reset(std::uint64_t seed);
     [[nodiscard]] std::vector<Action> legal_actions() const;
@@ -69,6 +69,7 @@ public:
     [[nodiscard]] bool finished() const noexcept { return phase_ == Phase::Finished; }
     [[nodiscard]] std::uint8_t current_player() const noexcept { return current_player_; }
     [[nodiscard]] std::uint8_t players() const noexcept { return players_; }
+    [[nodiscard]] bool farmers() const noexcept { return farmers_; }
     [[nodiscard]] std::uint8_t current_tile() const noexcept { return current_tile_; }
     [[nodiscard]] std::uint16_t placed_tiles() const noexcept { return placed_tiles_; }
     [[nodiscard]] std::uint16_t remaining_tiles() const noexcept;
@@ -85,6 +86,8 @@ private:
         std::array<Terrain, 4> edges{};
         std::array<std::int8_t, 4> city_groups{};
         std::array<std::int8_t, 4> road_groups{};
+        std::array<std::int8_t, 8> field_groups{};
+        std::array<std::uint8_t, 4> field_cities{};
         bool shield{false};
         bool monastery{false};
     };
@@ -108,10 +111,14 @@ private:
     static const std::array<std::array<RotatedTile, 4>, 32>& rotated_catalog();
     [[nodiscard]] static int index(int row, int column) noexcept { return row * kBoardSize + column; }
     [[nodiscard]] static int opposite(int side) noexcept { return (side + 2) & 3; }
+    // The half-edge a field crosses into on the neighbouring tile.
+    [[nodiscard]] static int opposite_half(int half) noexcept { return ((half + 4) & 7) ^ 1; }
     [[nodiscard]] static int neighbor(int cell, int side) noexcept;
     [[nodiscard]] const RotatedTile& tile_at(int cell) const noexcept;
     [[nodiscard]] bool tile_fits(int cell, std::uint8_t rotation) const noexcept;
     [[nodiscard]] FeatureResult trace_feature(int start_cell, Feature feature, std::uint8_t group) const;
+    [[nodiscard]] FeatureResult trace_field(int start_cell, std::uint8_t group) const;
+    [[nodiscard]] int field_points(const FeatureResult& field) const;
     [[nodiscard]] int occupied_around(int cell) const noexcept;
     void add_frontier_neighbors(int cell);
     void finish_turn();
@@ -130,6 +137,7 @@ private:
     std::array<int, kMaxPlayers> scores_{};
     std::array<std::uint8_t, kMaxPlayers> meeples_{};
     std::uint8_t players_{2};
+    bool farmers_{true};
     std::uint8_t current_player_{0};
     std::uint8_t current_tile_{kEmpty};
     Phase phase_{Phase::Tile};

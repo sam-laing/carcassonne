@@ -5,9 +5,15 @@ It uses a compact fixed board, a maintained placement frontier, precomputed tile
 rotations, in-place transitions, deterministic seeded decks, and explicit cloning.
 
 Implemented rules: all 72 base-deck tiles, legal edge matching, connected cities and
-roads, normal meeple placement, completed and end-game scoring, monasteries, ties,
-tile discards, and two to six players. Farmers, abbots, River, and Inns & Cathedrals
-are intentionally not enabled yet.
+roads, normal meeple placement, completed and end-game scoring, monasteries, farmers,
+ties, tile discards, and two to six players. Abbots, River, and Inns & Cathedrals are
+intentionally not enabled yet.
+
+Farmers are on by default (`Game(seed, players, farmers)`, `NativeGame(..., farmers=False)`
+to disable). A farmer goes on a field of the tile just placed if nobody already farms that
+field; fields never complete, and at game end each field pays 3 points per distinct
+completed city it borders to the player(s) with the most farmers in it. Fields are traced
+over 8 half-edges per tile, clockwise from the top side's left half.
 
 For compatibility with the existing Python engine, all 72 tiles are shuffled and the
 first drawn tile is placed at `(0, 0)`. An official fixed starting-tile mode can be

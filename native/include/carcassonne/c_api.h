@@ -29,6 +29,7 @@ typedef struct carcassonne_placed_tile {
 } carcassonne_placed_tile;
 
 carcassonne_game* carcassonne_game_new(uint64_t seed, uint8_t players);
+carcassonne_game* carcassonne_game_new_with_rules(uint64_t seed, uint8_t players, uint8_t farmers);
 carcassonne_game* carcassonne_game_clone(const carcassonne_game* game);
 void carcassonne_game_free(carcassonne_game* game);
 void carcassonne_game_reset(carcassonne_game* game, uint64_t seed);

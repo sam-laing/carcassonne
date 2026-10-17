@@ -25,6 +25,7 @@ class Feature(IntEnum):
     CITY = 0
     ROAD = 1
     MONASTERY = 2
+    FIELD = 3
 
 
 class _CAction(ctypes.Structure):
@@ -94,11 +95,12 @@ def _load_library(path: Optional[str] = None) -> ctypes.CDLL:
 class NativeGame:
     """Owns a native game state. Copies are explicit through :meth:`clone`."""
 
-    def __init__(self, seed: int = 0, players: int = 2, *, _library=None, _handle=None):
+    def __init__(self, seed: int = 0, players: int = 2, *, farmers: bool = True,
+                 _library=None, _handle=None):
         self._handle = None
         self._lib = _library or _load_library()
         self._configure_api()
-        self._handle = _handle or self._lib.carcassonne_game_new(seed, players)
+        self._handle = _handle or self._lib.carcassonne_game_new_with_rules(seed, players, farmers)
         if not self._handle:
             raise ValueError("could not create native game (players must be 2..6)")
 
@@ -106,6 +108,8 @@ class NativeGame:
         lib = self._lib
         lib.carcassonne_game_new.argtypes = [ctypes.c_uint64, ctypes.c_uint8]
         lib.carcassonne_game_new.restype = ctypes.c_void_p
+        lib.carcassonne_game_new_with_rules.argtypes = [ctypes.c_uint64, ctypes.c_uint8, ctypes.c_uint8]
+        lib.carcassonne_game_new_with_rules.restype = ctypes.c_void_p
         lib.carcassonne_game_clone.argtypes = [ctypes.c_void_p]
         lib.carcassonne_game_clone.restype = ctypes.c_void_p
         lib.carcassonne_game_free.argtypes = [ctypes.c_void_p]

@@ -33,6 +33,11 @@ carcassonne_game* carcassonne_game_new(uint64_t seed, uint8_t players) {
     catch (...) { return nullptr; }
 }
 
+carcassonne_game* carcassonne_game_new_with_rules(uint64_t seed, uint8_t players, uint8_t farmers) {
+    try { return new carcassonne_game{carcassonne::Game(seed, players, farmers != 0)}; }
+    catch (...) { return nullptr; }
+}
+
 carcassonne_game* carcassonne_game_clone(const carcassonne_game* game) {
     if (!game) return nullptr;
     try { return new carcassonne_game{game->value}; }

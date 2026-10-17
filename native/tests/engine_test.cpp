@@ -49,6 +49,28 @@ int main() {
         total_decisions += decisions;
     }
 
+    // Field placements are offered only with farmers enabled, and every farmer is
+    // returned when the game is scored.
+    std::uint64_t farmer_placements = 0;
+    for (std::uint64_t seed = 0; seed < 50; ++seed) {
+        for (bool farmers : {true, false}) {
+            Game simulation(seed, 2, farmers);
+            std::mt19937_64 rng(seed);
+            while (!simulation.finished()) {
+                const auto options = simulation.legal_actions();
+                for (const auto& option : options) {
+                    require(farmers || option.feature != Feature::Field || option.kind != ActionKind::PlaceMeeple,
+                            "field placement offered with farmers disabled");
+                }
+                const auto& action = options[rng() % options.size()];
+                if (action.kind == ActionKind::PlaceMeeple && action.feature == Feature::Field) ++farmer_placements;
+                simulation.apply_unchecked(action);
+            }
+            require(simulation.meeples(0) == 7 && simulation.meeples(1) == 7, "farmers were not returned");
+        }
+    }
+    require(farmer_placements > 0, "no farmer was ever placed");
+
     Game deterministic_a(1234, 2);
     Game deterministic_b(1234, 2);
     require(deterministic_a.play_random_game(5678) == deterministic_b.play_random_game(5678),
